@@ -46,21 +46,44 @@ namespace BibliotecaDynamics
                     try
                     {
                         //business logic here
+
+                        //prendo il valore prima
+                        Entity preMessageImage;
+                        preMessageImage = (Entity)context.PreEntityImages["preImage"];
+                        string proprietarioOld = ((Microsoft.Xrm.Sdk.EntityReference)preMessageImage.Attributes["crb92_cliente2"]).Name;
+
+
+                        Entity postMessageImage;
+                        postMessageImage = (Entity)context.PostEntityImages["postImage"];
+                        string proprietarioNew = ((Microsoft.Xrm.Sdk.EntityReference)postMessageImage.Attributes["crb92_cliente2"]).Name;
+                        var image = context.InputParameters;
+
                         if (context.Stage == 40) //40 is postoperation
                         {
 
-                        }
-                        var queryexpressione = new QueryExpression(context.PrimaryEntityName);
-                        // queryexpressione.
-                        var result = svc.Retrieve(context.PrimaryEntityName, libro, new ColumnSet(true)); //non prendere mai tutte le colonne
-                        result.GetAttributeValue<EntityReference>("nomeeeeCampo");
 
-                        var entity = new Entity("crb92_librocliente");
-                        entity.Attributes["crb92_nomeproprietario"] = "testNuovoPlugIn";
-                        entity.Attributes["crb92_libro"] = "nmBibliotecaNuova";
-                        entity.Attributes["crb92_name"] = "libro_clienteBBnuova";
-                        svc.Create(entity); //create a new record for entity
-                        return;
+                            var queryexpressione = new QueryExpression(context.PrimaryEntityName);
+                            // queryexpressione.
+                            var result = svc.Retrieve(context.PrimaryEntityName, libro, new ColumnSet(true)); //non prendere mai tutte le colonne
+                            result.GetAttributeValue<EntityReference>("nomeeeeCampo");
+
+                            var entity = new Entity("crb92_librocliente");
+                            entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
+                            entity.Attributes["crb92_libro"] = "nomelibro";
+                            entity.Attributes["crb92_name"] = proprietarioNew +"#inizioPrestito#" +DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                            svc.Create(entity); //create a new record for entity
+
+                            entity = new Entity("crb92_librocliente");
+                            entity.Attributes["crb92_nomeproprietario"] = proprietarioOld;
+                            entity.Attributes["crb92_libro"] = "nomelibro";
+                            entity.Attributes["crb92_name"] = proprietarioOld + "#finePrestito#" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                            svc.Create(entity); //create a new record for entity
+                            return;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                     catch (Exception ex)
                     {
