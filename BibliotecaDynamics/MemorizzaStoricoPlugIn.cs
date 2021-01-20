@@ -65,12 +65,12 @@ namespace BibliotecaDynamics
                             var queryexpressione = new QueryExpression(context.PrimaryEntityName);
                             // queryexpressione.
                             var result = svc.Retrieve(context.PrimaryEntityName, libro, new ColumnSet(true)); //non prendere mai tutte le colonne
-                            result.GetAttributeValue<EntityReference>("nomeeeeCampo");
+                            result.GetAttributeValue<EntityReference>("nomeCampo2");
 
                             var entity = new Entity("crb92_librocliente");
                             entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
                             entity.Attributes["crb92_libro"] = nomeLibro;
-                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#finePrestito#";
+                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#inizioPrestito#";
                             svc.Create(entity); //create a new record for entity
 
                             entity = new Entity("crb92_librocliente");
