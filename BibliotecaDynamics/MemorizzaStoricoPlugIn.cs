@@ -57,7 +57,7 @@ namespace BibliotecaDynamics
                             string proprietarioOld = "";
                             if (preMessageImage.Attributes.Contains("crb92_cliente2"))
                             {
-                                proprietarioOld = preMessageImage.Attributes["crb92_cliente2"].ToString();
+                                proprietarioOld = ((Microsoft.Xrm.Sdk.EntityReference)preMessageImage.Attributes["crb92_cliente2"]).Name;
                             }
                             string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
 
@@ -67,7 +67,7 @@ namespace BibliotecaDynamics
                             string proprietarioNew = "";
                             if (postMessageImage.Attributes.Contains("crb92_cliente2"))
                             {
-                                proprietarioNew = postMessageImage.Attributes["crb92_cliente2"].ToString();
+                                proprietarioNew = ((Microsoft.Xrm.Sdk.EntityReference)postMessageImage.Attributes["crb92_cliente2"]).Name;
                             }
 
 
@@ -76,7 +76,7 @@ namespace BibliotecaDynamics
                             var result = svc.Retrieve(context.PrimaryEntityName, libro, new ColumnSet(true)); //non prendere mai tutte le colonne
                             result.GetAttributeValue<EntityReference>("nomeCampo2");
 
-                            if (preMessageImage.Attributes.Contains("crb92_cliente2"))
+                            if (postMessageImage.Attributes.Contains("crb92_cliente2"))
                             {
                                 var entity = new Entity("crb92_librocliente");
                                 entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
@@ -84,7 +84,7 @@ namespace BibliotecaDynamics
                                 entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#inizioPrestito#";
                                 svc.Create(entity); //create a new record for entity
                             }
-                            if (postMessageImage.Attributes.Contains("crb92_cliente2"))
+                            if (preMessageImage.Attributes.Contains("crb92_cliente2"))
                             {
                                 var entity = new Entity("crb92_librocliente");
                                 entity.Attributes["crb92_nomeproprietario"] = proprietarioOld;
