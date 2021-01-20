@@ -50,12 +50,20 @@ namespace BibliotecaDynamics
                         //prendo il valore prima
                         Entity preMessageImage;
                         preMessageImage = (Entity)context.PreEntityImages["preImage"];
-                        string proprietarioOld = ((Microsoft.Xrm.Sdk.EntityReference)preMessageImage.Attributes["crb92_cliente2"]).Name;
-                        string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
+                        string proprietarioOld = "";
+                        if (preMessageImage.Attributes.Contains("crb92_cliente2"))
+                        {
+                            proprietarioOld = preMessageImage.Attributes["crb92_cliente2"].ToString();
+                        }
+                            string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
 
                         Entity postMessageImage;
                         postMessageImage = (Entity)context.PostEntityImages["postImage"];
-                        string proprietarioNew = ((Microsoft.Xrm.Sdk.EntityReference)postMessageImage.Attributes["crb92_cliente2"]).Name;
+                        string proprietarioNew = "";
+                        if (postMessageImage.Attributes.Contains("crb92_cliente2"))
+                        {
+                            proprietarioNew = postMessageImage.Attributes["crb92_cliente2"].ToString();
+                        }
                         var image = context.InputParameters;
 
                         if (context.Stage == 40) //40 is postoperation
@@ -67,17 +75,22 @@ namespace BibliotecaDynamics
                             var result = svc.Retrieve(context.PrimaryEntityName, libro, new ColumnSet(true)); //non prendere mai tutte le colonne
                             result.GetAttributeValue<EntityReference>("nomeCampo2");
 
-                            var entity = new Entity("crb92_librocliente");
-                            entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
-                            entity.Attributes["crb92_libro"] = nomeLibro;
-                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#inizioPrestito#";
-                            svc.Create(entity); //create a new record for entity
-
-                            entity = new Entity("crb92_librocliente");
-                            entity.Attributes["crb92_nomeproprietario"] = proprietarioOld;
-                            entity.Attributes["crb92_libro"] = nomeLibro;
-                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+"#"+proprietarioOld + "#"+ nomeLibro + "#finePrestito#" ;
-                            svc.Create(entity); //create a new record for entity
+                            if (preMessageImage.Attributes.Contains("crb92_cliente2"))
+                            {
+                                var entity = new Entity("crb92_librocliente");
+                                entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
+                                entity.Attributes["crb92_libro"] = nomeLibro;
+                                entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#inizioPrestito#";
+                                svc.Create(entity); //create a new record for entity
+                            }
+                            if (postMessageImage.Attributes.Contains("crb92_cliente2"))
+                            {
+                                var entity = new Entity("crb92_librocliente");
+                                entity.Attributes["crb92_nomeproprietario"] = proprietarioOld;
+                                entity.Attributes["crb92_libro"] = nomeLibro;
+                                entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioOld + "#" + nomeLibro + "#finePrestito#";
+                                svc.Create(entity); //create a new record for entity
+                            }
                             return;
                         }
                         else
