@@ -51,7 +51,7 @@ namespace BibliotecaDynamics
                         Entity preMessageImage;
                         preMessageImage = (Entity)context.PreEntityImages["preImage"];
                         string proprietarioOld = ((Microsoft.Xrm.Sdk.EntityReference)preMessageImage.Attributes["crb92_cliente2"]).Name;
-
+                        string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
 
                         Entity postMessageImage;
                         postMessageImage = (Entity)context.PostEntityImages["postImage"];
@@ -69,14 +69,14 @@ namespace BibliotecaDynamics
 
                             var entity = new Entity("crb92_librocliente");
                             entity.Attributes["crb92_nomeproprietario"] = proprietarioNew;
-                            entity.Attributes["crb92_libro"] = "nomelibro";
-                            entity.Attributes["crb92_name"] = proprietarioNew +"#inizioPrestito#" +DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                            entity.Attributes["crb92_libro"] = nomeLibro;
+                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "#" + proprietarioNew + "#" + nomeLibro + "#finePrestito#";
                             svc.Create(entity); //create a new record for entity
 
                             entity = new Entity("crb92_librocliente");
                             entity.Attributes["crb92_nomeproprietario"] = proprietarioOld;
-                            entity.Attributes["crb92_libro"] = "nomelibro";
-                            entity.Attributes["crb92_name"] = proprietarioOld + "#finePrestito#" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                            entity.Attributes["crb92_libro"] = nomeLibro;
+                            entity.Attributes["crb92_name"] = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")+"#"+proprietarioOld + "#"+ nomeLibro + "#finePrestito#" ;
                             svc.Create(entity); //create a new record for entity
                             return;
                         }
