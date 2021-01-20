@@ -47,27 +47,28 @@ namespace BibliotecaDynamics
                     {
                         //business logic here
 
-                        //prendo il valore prima
-                        Entity preMessageImage;
-                        preMessageImage = (Entity)context.PreEntityImages["preImage"];
-                        string proprietarioOld = "";
-                        if (preMessageImage.Attributes.Contains("crb92_cliente2"))
-                        {
-                            proprietarioOld = preMessageImage.Attributes["crb92_cliente2"].ToString();
-                        }
-                            string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
 
-                        Entity postMessageImage;
-                        postMessageImage = (Entity)context.PostEntityImages["postImage"];
-                        string proprietarioNew = "";
-                        if (postMessageImage.Attributes.Contains("crb92_cliente2"))
-                        {
-                            proprietarioNew = postMessageImage.Attributes["crb92_cliente2"].ToString();
-                        }
-                        var image = context.InputParameters;
 
                         if (context.Stage == 40) //40 is postoperation
                         {
+                            //prendo il valore prima
+                            Entity preMessageImage;
+                            preMessageImage = (Entity)context.PreEntityImages["preImage"];
+                            string proprietarioOld = "";
+                            if (preMessageImage.Attributes.Contains("crb92_cliente2"))
+                            {
+                                proprietarioOld = preMessageImage.Attributes["crb92_cliente2"].ToString();
+                            }
+                            string nomeLibro = preMessageImage.Attributes["crb92_name"].ToString();
+
+                            //prendo il valore finale
+                            Entity postMessageImage;
+                            postMessageImage = (Entity)context.PostEntityImages["postImage"];
+                            string proprietarioNew = "";
+                            if (postMessageImage.Attributes.Contains("crb92_cliente2"))
+                            {
+                                proprietarioNew = postMessageImage.Attributes["crb92_cliente2"].ToString();
+                            }
 
 
                             var queryexpressione = new QueryExpression(context.PrimaryEntityName);
